@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDIS 65 - C.A.T.E.</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background: #f4f4f6;
+  color: #222;
+}
+
+header {
+  background: #b00000;
+  color: white;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.logo-text-top {
+  color: #b00000;
+  font-weight: bold;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+}
+
+.logo-mountains {
+  width: 55px;
+  height: 15px;
+  fill: none;
+  stroke-width: 2px;
+}
+
+.logo-text-bottom {
+  color: #b00000;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-main-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 1em;
+}
+
+.header-subtitle {
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.container {
+  padding: 15px;
+  margin-bottom: 150px;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card {
+  background: white;
+  margin-bottom: 15px;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  border-left: 5px solid #b00000;
+}
+
+h2 {
+  font-size: 15px;
+  margin-top: 0;
+  color: #b00000;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.critere-desc {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+label {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  font-size: 13.5px;
+  line-height: 1.4;
+  cursor: pointer;
+  border: 1px solid #eef0f2;
+}
+
+label:hover {
+  background: #f1f3f5;
+}
+
+input[type="radio"] {
+  margin-right: 12px;
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: #b00000;
+}
+
+.result {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1c1c1e;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 -3px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
+.score-display {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 2px;
+}
+
+.big {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.reset { background: #444446; color: white; }
+.print { background: #b00000; color: white; }
+
+@media print {
+  .result, input[type="radio"] { display: none !important; }
+  .container { margin-bottom: 0; }
+  .card { page-break-inside: avoid; border: 1px solid #ccc; box-shadow: none; }
+  label { background: transparent; border: none; }
+  label:has(input:checked) { font-weight: bold; text-decoration: underline; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo-container">
+    <div class="logo-text-top">SAPEURS-POMPIERS</div>
+    <svg class="logo-mountains" viewBox="0 0 70 20">
+      <path d="M2,18 Q15,12 22,14 T45,8 T68,15" fill="none" stroke="#b00000" />
+      <path d="M2,15 Q20,6 35,12 T55,10 T68,18" fill="none" stroke="#0033aa" />
+    </svg>
+    <div class="logo-text-bottom">Hautes-Pyrénées</div>
+  </div>
+  
+  <div class="title-container">
+    <div class="header-main-title">C.A.T.E.</div>
+    <div class="header-subtitle">Grille Opérationnelle MSP</div>
+  </div>
+</header>
+
+<div class="container" id="form"></div>
+
+<div class="result">
+  <div class="score-display">
+    Total Score : <strong id="score">0</strong> / <strong id="max">0</strong>
+  </div>
+  <div class="big" id="niveau">🟢 SIMPLE</div>
+  
+  <div class="button-container">
+    <button class="reset" onclick="resetForm()">Réinitialiser</button>
+    <button class="print" onclick="window.print()">Imprimer / PDF</button>
+  </div>
+</div>
+
+<script>
+const grid = [
+  {
+    title: "Les risques",
+    options: [
+      "1 à 2 Risques courants. Risques facilement observables.",
+      "1 à 2 risques dont 1 risque spécifique (technologique) OU 1 Risque à rechercher au moins.",
+      "Multi risques avec des risques à rechercher."
+    ]
+  },
+  {
+    title: "L'information",
+    options: [
+      "Conforme, complète. Elle est directement accessible ou donnée sans difficulté.",
+      "Peut être parcellaire, partiellement erronée. Elle est facilement accessible si elle est demandée.",
+      "Peut être absente, complètement erronée. Elle nécessite d'être recherchée voire recoupée. Elle peut ne pas être fournie."
+    ]
+  },
+  {
+    title: "Les victimes",
+    options: [
+      "Pas de victimes ou une victime visible nécessitant une prise en charge simple (elle est conciliante).",
+      "1 à 2 victimes dont 1 nécessite une prise en charge technique ou doit être recherchée.",
+      "Indétermination des victimes à prendre en charge. Moyens dépassés. Recherche indispensable. Victime difficile à prendre en charge."
+    ]
+  },
+  {
+    title: "Tiers & Partenaires",
+    options: [
+      "Pas de tiers ou partenaires facilitant l'intervention, ou tiers/partenaires facilitateurs de l'intervention.",
+      "Tiers ou partenaires nécessaires à l'intervention et devant être intégrés.",
+      "Tiers ou partenaires complexifiant l'intervention soit par leur absence, soit par leurs attitudes inappropriées ou réponses erronées/partielles."
+    ]
+  },
+  {
+    title: "Les personnels",
+    options: [
+      "En nombre réglementaire, répondent conformément aux ordres et sont facilitateurs.",
+      "En nombre, peuvent être hésitants, nécessitent un contrôle et ne rendent pas compte d'eux-mêmes.",
+      "Pas en nombre réglementaire ou ne répondent pas conformément aux ordres, ne sont pas facilitateurs, peuvent faire des erreurs."
+    ]
+  },
+  {
+    title: "Les moyens",
+    options: [
+      "Les moyens et matériels à disposition sont conformes, en bon état de fonctionnement et en nombre suffisant.",
+      "Des moyens ou matériels peuvent être difficiles à trouver, à mettre en œuvre voire manquer ou dysfonctionner.",
+      "Moyens insuffisants. Un des moyens ou matériels sera manquant, inadapté ou se dégradant."
+    ]
+  },
+  {
+    title: "Evolution & Dynamique",
+    options: [
+      "La situation est peu évolutive voire figée. La dynamique est lente. Le temps laissé à la prise de décision est suffisant.",
+      "La situation est évolutive, rythmée par quelques événements non dimensionnants. Le temps laissé à la prise de décision est contraint.",
+      "La situation se dégrade, elle est rythmée par des événements non souhaités voire dimensionnants. Le temps laissé à la prise de décision est très réduit."
+    ]
+  },
+  {
+    title: "Solutions & Ressources",
+    options: [
+      "La ou les solutions existent, j'ai juste à appliquer strictement ce qui est prescrit dans les règlements.",
+      "La ou les solutions se déduisent, je dois m'adapter aux différentes solutions existantes dans les règlements.",
+      "La ou les solutions se construisent, aucune préconisation n'existe, je dois innover et créer la ou les solutions."
+    ]
+  }
+];
+
+const form = document.getElementById("form");
+const max = grid.length * 3;
+document.getElementById("max").textContent = max;
+
+grid.forEach((c, i) => {
+  let div = document.createElement("div");
+  div.className = "card";
+
+  let html = `<h2>${c.title}</h2>`;
+  
+  c.options.forEach((t, j) => {
+    const v = j + 1;
+    html += `
+      <label>
+        <input type="radio" name="c${i}" value="${v}" ${j === 0 ? "checked" : ""} onchange="calc()">
+        <div><strong>(${v})</strong> ${t}</div>
+      </label>
+    `;
+  });
+
+  div.innerHTML = html;
+  form.appendChild(div);
+});
+
+function calc() {
+  let s = 0;
+  document.querySelectorAll("input:checked").forEach(x => s += parseInt(x.value));
+
+  document.getElementById("score").textContent = s;
+
+  // Application des nouveaux seuils demandés
+  let n = "🟢 SIMPLE";
+  if (s >= 13) {
+    n = "🔴 DÉGRADÉE";
+  } else if (s >= 10) {
+    n = "🟠 DÉRIVÉE";
+  }
+
+  document.getElementById("niveau").textContent = n;
+}
+
+function resetForm() {
+  document.querySelectorAll("input[value='1']").forEach(x => x.checked = true);
+  calc();
+}
+
+calc();
+</script>
+
+</body>
+</html>
